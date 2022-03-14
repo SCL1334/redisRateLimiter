@@ -1,6 +1,6 @@
 const cache = require('./cache');
 
-// Leaky Bucket / Fixed Window / Sliding Log / Sliding Window
+// Fixed Window / Sliding Log / Sliding Window
 
 const fixWindow = function (windowSec, limit) {
   return async function (req, res, next) {
@@ -121,7 +121,6 @@ const slideWindow = function (windowSec, limit) {
         return 0
       end
     end
-
     `;
     const result = await cache.eval(luaScript, 2, ip, limit, curStamp, windowMs);
     if (result === 1) { return next(); }
