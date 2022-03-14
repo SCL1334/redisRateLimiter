@@ -49,6 +49,8 @@ If the request from worker is accepted, the response will contain a ```data``` f
 Otherwise, will get a ```429 error status``` with ```error``` message. 
 
 ## Fixed Window
+<img width="1057" alt="image" src="https://user-images.githubusercontent.com/93208804/158221808-2fb42840-f075-4a8b-a361-3ae8ec25928e.png">
+
 The main idea of **fixed window** is to record user (with ip, token, etc...) and count the user's visiting.  
 First, set a fixed time period(window), then set the max number user can access in the time period.  
 Once user's visiting exceed the limit, reject the following requests until the next window.  
@@ -64,6 +66,8 @@ Once user's visiting exceed the limit, reject the following requests until the n
     In each window it doesn't exceed the limit, but in the short period it can result huge stress visitings.  
 
 ## Sliding Log  
+<img width="1056" alt="image" src="https://user-images.githubusercontent.com/93208804/158221947-86b24b6f-5bd0-437e-8fc6-ba0b290359ff.png">
+
 To improve the weakness in fixed window, **sliding window** record the time(with timestamp) of user visitings as log.  
 With tracing the logs, it's easier to count the quota for user visiting.  
 Once user making a request, we check the user's logs to check the left quota.  
@@ -78,6 +82,8 @@ If the quota has been running out, we reject the request, otherwise, accept it.
 * Need to store a lot of logs which would be too expensive.  
 
 ## Sliding Window
+<img width="1058" alt="image" src="https://user-images.githubusercontent.com/93208804/158222028-ed990c25-3ace-4306-b380-c3b979261a02.png">
+
 **Sliding Window** is a hybrid of fixed window and sliding log.  
 It try to fix the issues in both of them.  
 The main idea is, it needs up to 2 window data, the previous and the current one.  
