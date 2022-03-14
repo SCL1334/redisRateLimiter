@@ -3,10 +3,10 @@
 ***Rate limiting*** is a strategy for limiting network traffic.  
 It help to protect server / database / API from certain kinds of malicious activity, such as web crawler and ddos attack.  
 Its main idea is to control the amount of requests that can be made by the requester/user in certain time period.  
-The goal of rate limiting is to reduce strain on web servers and the service availability.
+The goal of rate limiting is to reduce strain on web servers and keep the service availability.  
 
 ***Redis*** is a popular and powerful in-memory data structure store, also is a great and reliable choice for caching.  
-Due to its stability, high-speed and different data type, it's suitable for building rate limiters.
+Due to its stability, high-speed and different data type, it's suitable for building rate limiters.  
 
 ***Lua*** is a powerful, efficient, lightweight, embeddable scripting language.  
 
@@ -23,7 +23,7 @@ For instance, get data from Redis, do some operations in NodeJS, and send comman
 It would be better to run the operation on the database layer.  
 Fortunately, here is Lua.  
 Lua scripts are executed in a fully synchronous and atomic fashion and support in Redis.  
-***note***: Fully synchronous and atomic fashion means it may block other operation, so the calculation in Lua script should be simple.
+***note***: Fully synchronous and atomic fashion means it may block other operation, so the calculation in Lua script should be simple.  
 
 ## Algorithms of rate limiting
 There are 5 main algorithms of rate limiting:
@@ -35,10 +35,10 @@ There are 5 main algorithms of rate limiting:
 
 Here I use Fixed Window,  Sliding Log, and  Sliding Window for sample.  
 
-## Usage
+## Setting
 Use ```npm install``` for the dependencies needed.  
 There are 3 route for each algorithm sample.  
-I perform the race limiters as middleware in Express. 
+I perform the race limiters as middleware in Express.   
 Each function from ```rateLimiter.js``` has 2 parameter:  
 1. Time period (the length of window) in seconds ```(Int)``` 
 1. Limit of visiting times in the time period ```(Int)```
