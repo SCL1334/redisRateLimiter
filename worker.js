@@ -13,7 +13,7 @@ const multiTest = () => {
   setInterval(test, 500);
 };
 
-multiTest();
+// multiTest();
 
-// test();
-// setTimeout(multiTest, 3500);
+test();
+setTimeout(multiTest, 3500);
