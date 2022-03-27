@@ -31,7 +31,7 @@ app.get('/4', raceLimiter.leakyBucket(6, 3), (req, res) => {
 
 app.get('/5', raceLimiter.tokenBucket(6, 3), (req, res) => {
   const time = Date.now().toString().slice(8, 13);
-  res.json({ time, data: '4' });
+  res.json({ time, data: '5' });
 });
 
 app.listen(port, () => {
