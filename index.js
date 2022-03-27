@@ -24,6 +24,16 @@ app.get('/3', raceLimiter.slideWindow(5, 3), (req, res) => {
   res.json({ time, data: '3' });
 });
 
+app.get('/4', raceLimiter.leakyBucket(6, 3), (req, res) => {
+  const time = Date.now().toString().slice(8, 13);
+  res.json({ time, data: '4' });
+});
+
+app.get('/5', raceLimiter.tokenBucket(6, 3), (req, res) => {
+  const time = Date.now().toString().slice(8, 13);
+  res.json({ time, data: '4' });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);
 });
