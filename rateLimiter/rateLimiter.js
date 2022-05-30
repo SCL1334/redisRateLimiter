@@ -139,6 +139,7 @@ const leakyBucket = function (windowSec, limit) {
     -- if ip not exist, record and pass
     local exist = redis.call('exists', KEYS[1])
     if (exist == 0) then
+      -- set nextAllow time
       redis.call('set', KEYS[1], tonumber(ARGV[1]) + intermal);
       return 1
     end

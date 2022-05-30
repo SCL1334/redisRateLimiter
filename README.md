@@ -30,10 +30,8 @@ There are 5 main algorithms of rate limiting:
 * Fixed Window
 * Sliding Log
 * Sliding Window
-* Token Bucket
 * Leaky Bucket  
-
-Here I use Fixed Window,  Sliding Log, and  Sliding Window for sample.  
+* Token Bucket
 
 ## Setting
 Use ```npm install``` for the dependencies needed.  
@@ -85,7 +83,7 @@ If the quota has been running out, we reject the request, otherwise, accept it.
 <img width="1058" alt="image" src="https://user-images.githubusercontent.com/93208804/158222028-ed990c25-3ace-4306-b380-c3b979261a02.png">
 
 **Sliding Window** is a hybrid of fixed window and sliding log.  
-It try to fix the issues in both of them.  
+It tries to fix the issues in both of them.  
 The main idea is, it needs up to 2 window data, the previous and the current one.  
 Each request in the same window will be recored in the window's counter.  
 Near the window's boundary, we'll check the previous window's counter, calculate the quota left by weights base on time.  
@@ -103,3 +101,37 @@ At the same time, it reduce the memory consumption compare to sliding log.
 ### Cons
 * Need to pay attention on preciseness.  
     Because it is based on precise in calculating weighted value, the preciseness will affect a lot.  
+
+## Leacky Bucket
+
+
+
+**Leacky Bucket** is usually used in Traffic Shaping and Rate Limiting. The main purpose of it is to convert the bursty traffic to a constant rate, just like a bucket leak. All the overflow requests will be discarded.  
+Here we record each user (with ip, token, etc...) and user's visiting time to calculate what time he could access next.  
+If the person keep trying to access, all the requests before next allowing would be refused.    
+As a result, even the requests are more than expected, the final passing requests will be in a fixed rate.  
+
+### Pros  
+* Accurate shaping by fixing the flow at smooth and constant rate. 
+
+### Cons
+* Not flexible and efficient if there are sudden requests.
+
+## Token Bucket  
+
+**Token Bucket** is also used in Traffic Shaping and Rate Limiting. However, it is not as strict as Leaky Bucket. In contrast, it provides a buffer to retain some flexibility in burst flow.  
+In **Token Bucket** , we refill the token to a bucket with fixed capacity at constant rate. If the tokens are over the  capacity, the redundant tokens wiil be discarded. Every request consumes the token in the bucket. If the bucket is empty, the request will be discarded.   
+In this case, the max amount of the requests in a period of time is limited by the bucket's capacity. At the same time, token could be stored as buffer allowing burst flow. If the bucket gets empty, it is similar to Leaky Bucket, new request needs to wait for next refilling.  
+
+### Pros  
+* Retain some flexibility in sudden demands.
+
+
+### Cons
+* Need to pay attention on setting.  
+  Although it allows burst rates, if the bucket gets empty, it could not handle the next burst rate until there are enough token refilled.
+
+
+
+
+
