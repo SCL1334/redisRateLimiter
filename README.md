@@ -14,7 +14,8 @@ Due to its stability, high-speed and different data type, it's suitable for buil
 But occasionally there are behaviors that cannot be efficiently or safely achieved with a client/server architecture—the logic needs to be run on the database layer.  
 This is where Lua comes in. Lua is baked into Redis as a scripting language.  
 With Lua you can execute code atomicly in Redis without transmission overhead to and from the client.  
-***from*** [Redis](https://redis.com/redis-best-practices/lua-helpers/)   
+
+***from*** [Redis](https://redis.com/redis-best-practices/lua-helpers/) 
 
 Due to some operations in rate limiter, race condition may happen in high frequency visitings.  
 To prevent the risk of inaccuracy, all the operations in rate limiter need guarantee in atomicity.  
@@ -47,7 +48,8 @@ If the request from worker is accepted, the response will contain a ```data``` f
 Otherwise, will get a ```429 error status``` with ```error``` message. 
 
 ## Fixed Window
-<img width="1057" alt="image" src="https://user-images.githubusercontent.com/93208804/158221808-2fb42840-f075-4a8b-a361-3ae8ec25928e.png">
+
+![Fixed_Window](https://user-images.githubusercontent.com/93208804/171091596-7f3025c7-7343-42e9-9df3-986a97803134.png)
 
 The main idea of **fixed window** is to record user (with ip, token, etc...) and count the user's visiting.  
 First, set a fixed time period(window), then set the max number user can access in the time period.  
@@ -64,7 +66,8 @@ Once user's visiting exceed the limit, reject the following requests until the n
     In each window it doesn't exceed the limit, but in the short period it can result huge stress visitings.  
 
 ## Sliding Log  
-<img width="1056" alt="image" src="https://user-images.githubusercontent.com/93208804/158221947-86b24b6f-5bd0-437e-8fc6-ba0b290359ff.png">
+
+![Sliding_Log](https://user-images.githubusercontent.com/93208804/171091612-4a609ed7-22b6-4e5b-ac0e-ab1ed75698c7.png)
 
 To improve the weakness in fixed window, **sliding window** record the time(with timestamp) of user visitings as log.  
 With tracing the logs, it's easier to count the quota for user visiting.  
@@ -80,7 +83,8 @@ If the quota has been running out, we reject the request, otherwise, accept it.
 * Need to store a lot of logs which would be too expensive.  
 
 ## Sliding Window
-<img width="1058" alt="image" src="https://user-images.githubusercontent.com/93208804/158222028-ed990c25-3ace-4306-b380-c3b979261a02.png">
+
+![Sliding_Window](https://user-images.githubusercontent.com/93208804/171091628-97fbe048-ccfa-4208-899b-a714838f1461.png)
 
 **Sliding Window** is a hybrid of fixed window and sliding log.  
 It tries to fix the issues in both of them.  
@@ -104,7 +108,7 @@ At the same time, it reduce the memory consumption compare to sliding log.
 
 ## Leacky Bucket
 
-
+![Leaky_Bucket](https://user-images.githubusercontent.com/93208804/171091649-1f1a3823-095a-4687-b5bd-a99f4320cab9.png)
 
 **Leacky Bucket** is usually used in Traffic Shaping and Rate Limiting. The main purpose of it is to convert the bursty traffic to a constant rate, just like a bucket leak. All the overflow requests will be discarded.  
 Here we record each user (with ip, token, etc...) and user's visiting time to calculate what time he could access next.  
@@ -118,6 +122,8 @@ As a result, even the requests are more than expected, the final passing request
 * Not flexible and efficient if there are sudden requests.
 
 ## Token Bucket  
+
+![Token_Bucket](https://user-images.githubusercontent.com/93208804/171091662-a28c03fd-c1bf-4f9e-a946-d49f1d02d9d6.png)
 
 **Token Bucket** is also used in Traffic Shaping and Rate Limiting. However, it is not as strict as Leaky Bucket. In contrast, it provides a buffer to retain some flexibility in burst flow.  
 In **Token Bucket** , we refill the token to a bucket with fixed capacity at constant rate. If the tokens are over the  capacity, the redundant tokens wiil be discarded. Every request consumes the token in the bucket. If the bucket is empty, the request will be discarded.   
